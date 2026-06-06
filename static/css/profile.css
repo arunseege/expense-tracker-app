@@ -1,0 +1,280 @@
+/* Profile page styles for Spendly. Hex values only in :root; all rules use var(). */
+
+:root {
+    --badge-food-bg: #fef3c7;
+    --badge-food-text: #92400e;
+    --badge-transport-bg: #dbeafe;
+    --badge-transport-text: #1e40af;
+    --badge-bills-bg: #fee2e2;
+    --badge-bills-text: #991b1b;
+    --badge-health-bg: #d1fae5;
+    --badge-health-text: #065f46;
+    --badge-entertainment-bg: #ede9fe;
+    --badge-entertainment-text: #5b21b6;
+    --badge-shopping-bg: #fce7f3;
+    --badge-shopping-text: #9d174d;
+    --badge-other-bg: #f3f4f6;
+    --badge-other-text: #374151;
+    --color-avatar-bg: #111827;
+    --color-avatar-text: #ffffff;
+    --profile-max-width: 1200px;
+}
+
+/* Layout */
+
+.profile-layout {
+    max-width: var(--profile-max-width);
+    margin: var(--space-xl) auto;
+    padding: 0 var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* Card */
+
+.profile-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-xl);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* User info card */
+
+.profile-user-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-avatar-bg);
+    color: var(--color-avatar-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    letter-spacing: -0.5px;
+}
+
+.profile-user-name {
+    margin: 0 0 var(--space-xs);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.profile-user-email {
+    margin: 0 0 var(--space-xs);
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.profile-user-since {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+}
+
+/* Stats row */
+
+.profile-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Bottom row: transactions + breakdown side by side */
+
+.profile-bottom-row {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--space-lg);
+    align-items: start;
+}
+
+/* Section title */
+
+.profile-section-title {
+    margin: 0 0 var(--space-lg);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Transaction table */
+
+.tx-table-wrapper {
+    overflow-x: auto;
+}
+
+.tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tx-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0 var(--space-md) var(--space-sm);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.tx-table td {
+    padding: var(--space-md) var(--space-md);
+    color: var(--color-text);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.95rem;
+}
+
+.tx-description {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.tx-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tx-table tbody tr:hover td {
+    background: var(--color-bg);
+}
+
+.tx-amount-col {
+    text-align: right;
+}
+
+.tx-amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.tx-date {
+    color: var(--color-muted);
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
+/* Category badges */
+
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-food         { background: var(--badge-food-bg);          color: var(--badge-food-text); }
+.badge-transport    { background: var(--badge-transport-bg);     color: var(--badge-transport-text); }
+.badge-bills        { background: var(--badge-bills-bg);         color: var(--badge-bills-text); }
+.badge-health       { background: var(--badge-health-bg);        color: var(--badge-health-text); }
+.badge-entertainment{ background: var(--badge-entertainment-bg); color: var(--badge-entertainment-text); }
+.badge-shopping     { background: var(--badge-shopping-bg);      color: var(--badge-shopping-text); }
+.badge-other        { background: var(--badge-other-bg);         color: var(--badge-other-text); }
+
+/* Category breakdown */
+
+.category-breakdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.category-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.category-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.category-total {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text);
+}
+
+.progress-bar-track {
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    width: var(--bar-width);
+}
+
+/* Responsive */
+
+@media (max-width: 640px) {
+    .profile-stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-bottom-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-user-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-layout {
+        padding: 0 var(--space-md);
+    }
+}

@@ -94,6 +94,18 @@ def create_user(name, email, password):
         conn.close()
 
 
+def get_user_by_id(user_id):
+    """Return the user row matching user_id, or None if no such user exists."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            "SELECT * FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+
 def get_user_by_email(email):
     """Return the user row matching email, or None if no such user exists."""
     conn = get_db()
