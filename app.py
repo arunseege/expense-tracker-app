@@ -1,9 +1,10 @@
 import os
+from datetime import datetime
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
-from database.db import create_user, get_user_by_email, init_db, seed_db
+from database.db import create_user, get_user_by_email, get_user_by_id, init_db, seed_db
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if session.get("user_id"):
-        return redirect(url_for("index"))
+        return redirect(url_for("profile"))
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip()
@@ -54,7 +55,7 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if session.get("user_id"):
-        return redirect(url_for("index"))
+        return redirect(url_for("profile"))
 
     if request.method == "POST":
         email = request.form.get("email", "").strip()
@@ -72,7 +73,7 @@ def login():
 
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
-        return redirect(url_for("index"))
+        return redirect(url_for("profile"))
 
     return render_template("login.html")
 
@@ -81,6 +82,57 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+
+@app.route("/profile")
+def profile():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    row = get_user_by_id(session["user_id"])
+    name = row["name"] if row else session.get("user_name", "")
+    initials = "".join(part[0].upper() for part in name.split()[:2])
+    created_at = row["created_at"] if row else ""
+    try:
+        member_since = datetime.strptime(created_at[:7], "%Y-%m").strftime("%B %Y")
+    except (ValueError, TypeError):
+        member_since = ""
+    user = {
+        "name": name,
+        "email": row["email"] if row else "",
+        "member_since": member_since,
+        "initials": initials,
+    }
+    stats = {
+        "total_spent": 344.39,
+        "transaction_count": 8,
+        "top_category": "Shopping",
+    }
+    transactions = [
+        {"date": "2026-06-15", "description": "New shoes",        "category": "Shopping",       "amount": 120.40},
+        {"date": "2026-06-12", "description": "Movie ticket",     "category": "Entertainment",  "amount": 18.99},
+        {"date": "2026-06-09", "description": "Pharmacy",         "category": "Health",         "amount": 45.00},
+        {"date": "2026-06-06", "description": "Electricity bill", "category": "Bills",          "amount": 85.75},
+        {"date": "2026-06-04", "description": "Monthly metro",    "category": "Transport",      "amount": 30.00},
+        {"date": "2026-06-02", "description": "Lunch at cafe",    "category": "Food",           "amount": 12.50},
+    ]
+    categories = [
+        {"name": "Shopping",      "total": 120.40, "percent": 35},
+        {"name": "Bills",         "total": 85.75,  "percent": 25},
+        {"name": "Health",        "total": 45.00,  "percent": 13},
+        {"name": "Food",          "total": 34.50,  "percent": 10},
+        {"name": "Transport",     "total": 30.00,  "percent": 9},
+        {"name": "Entertainment", "total": 18.99,  "percent": 6},
+        {"name": "Other",         "total": 9.75,   "percent": 3},
+    ]
+    return render_template(
+        "profile.html",
+        user=user,
+        stats=stats,
+        transactions=transactions,
+        categories=categories,
+        main_class="profile-layout",
+    )
 
 
 if __name__ == "__main__":
