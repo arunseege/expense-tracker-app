@@ -5,13 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Spendly{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
 </head>
 <body>
     <header class="site-header">
-        <a href="{{ url_for('register') }}">Spendly</a>
+        <a href="{{ url_for('index') }}" class="site-logo">Spendly</a>
+        <nav class="site-nav">
+            {% if session.get('user_id') %}
+                <span class="nav-greeting">Hi, {{ session['user_name'] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-lg btn-outline">Sign out</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-lg">Sign in</a>
+            {% endif %}
+        </nav>
     </header>
 
-    <main class="container">
+    <main class="{{ main_class|default('container') }}">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flash-list">
