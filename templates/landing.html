@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Spendly — Track your expenses, effortlessly{% endblock %}
+
+{% block content %}
+<section class="landing-hero">
+    <h1>Your money,<br><span>under control.</span></h1>
+    <p>Spendly helps you log, track, and understand where your money goes — simply and without the clutter.</p>
+    <div class="hero-actions">
+        <a href="{{ url_for('register') }}" class="btn btn-lg">Get started free</a>
+        <a href="{{ url_for('login') }}" class="btn btn-lg btn-outline">Sign in</a>
+    </div>
+</section>
+
+<div class="features">
+    <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Log expenses fast</h3>
+        <p>Add any expense in seconds — amount, category, and a note.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>See the full picture</h3>
+        <p>Browse your spending history and spot patterns at a glance.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Private by default</h3>
+        <p>Your data stays yours — no ads, no tracking, no sharing.</p>
+    </div>
+</div>
+
+<footer class="landing-footer">
+    Built with Flask &amp; SQLite &mdash; lightweight by design.
+</footer>
+{% endblock %}
