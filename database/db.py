@@ -73,6 +73,27 @@ def init_db():
         conn.close()
 
 
+def create_user(name, email, password):
+    """Insert a new user with a hashed password.
+
+    Returns the new user's id on success. Returns None if the email is already
+    registered (the users.email UNIQUE constraint raises IntegrityError). Any
+    other database error is allowed to propagate.
+    """
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+            (name, email, generate_password_hash(password)),
+        )
+        conn.commit()
+        return cursor.lastrowid
+    except sqlite3.IntegrityError:
+        return None
+    finally:
+        conn.close()
+
+
 def seed_db():
     """Insert one demo user and 8 sample expenses, only if the DB is empty.
 
