@@ -5,6 +5,7 @@ from flask import Flask, flash, redirect, render_template, request, session, url
 from werkzeug.security import check_password_hash
 
 from database.db import create_user, get_user_by_email, get_user_by_id, init_db, seed_db
+from database.queries import get_category_breakdown, get_recent_transactions, get_summary_stats
 
 app = Flask(__name__)
 
@@ -103,28 +104,9 @@ def profile():
         "member_since": member_since,
         "initials": initials,
     }
-    stats = {
-        "total_spent": 344.39,
-        "transaction_count": 8,
-        "top_category": "Shopping",
-    }
-    transactions = [
-        {"date": "2026-06-15", "description": "New shoes",        "category": "Shopping",       "amount": 120.40},
-        {"date": "2026-06-12", "description": "Movie ticket",     "category": "Entertainment",  "amount": 18.99},
-        {"date": "2026-06-09", "description": "Pharmacy",         "category": "Health",         "amount": 45.00},
-        {"date": "2026-06-06", "description": "Electricity bill", "category": "Bills",          "amount": 85.75},
-        {"date": "2026-06-04", "description": "Monthly metro",    "category": "Transport",      "amount": 30.00},
-        {"date": "2026-06-02", "description": "Lunch at cafe",    "category": "Food",           "amount": 12.50},
-    ]
-    categories = [
-        {"name": "Shopping",      "total": 120.40, "percent": 35},
-        {"name": "Bills",         "total": 85.75,  "percent": 25},
-        {"name": "Health",        "total": 45.00,  "percent": 13},
-        {"name": "Food",          "total": 34.50,  "percent": 10},
-        {"name": "Transport",     "total": 30.00,  "percent": 9},
-        {"name": "Entertainment", "total": 18.99,  "percent": 6},
-        {"name": "Other",         "total": 9.75,   "percent": 3},
-    ]
+    stats = get_summary_stats(session["user_id"])
+    transactions = get_recent_transactions(session["user_id"])
+    categories = get_category_breakdown(session["user_id"])
     return render_template(
         "profile.html",
         user=user,
