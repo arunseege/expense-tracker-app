@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(database/queries.py)",
+      "Edit(app.py)"
+    ]
+  }
+}
