@@ -17,6 +17,51 @@
     </div>
 </div>
 
+<div class="filter-bar">
+    <a href="{{ url_for('profile', filter='this_month') }}"
+       class="filter-btn{% if active_filter == 'this_month' %} filter-btn--active{% endif %}">This Month</a>
+    <a href="{{ url_for('profile', filter='last_month') }}"
+       class="filter-btn{% if active_filter == 'last_month' %} filter-btn--active{% endif %}">Last Month</a>
+    <a href="{{ url_for('profile', filter='last_3_months') }}"
+       class="filter-btn{% if active_filter == 'last_3_months' %} filter-btn--active{% endif %}">Last 3 Months</a>
+    <a href="{{ url_for('profile', filter='all_time') }}"
+       class="filter-btn{% if active_filter == 'all_time' %} filter-btn--active{% endif %}">All Time</a>
+
+    <span class="filter-separator"></span>
+
+    <form class="filter-date-form" id="filter-date-form" method="GET" action="{{ url_for('profile') }}">
+        <label class="filter-label" for="date_from">From</label>
+        <input class="filter-date-input{% if active_filter == 'custom' %} filter-date-input--active{% endif %}"
+               type="date" id="date_from" name="date_from" value="{{ date_from }}">
+        <label class="filter-label" for="date_to">To</label>
+        <input class="filter-date-input{% if active_filter == 'custom' %} filter-date-input--active{% endif %}"
+               type="date" id="date_to" name="date_to" value="{{ date_to }}">
+        <button class="filter-btn filter-btn--apply" type="submit">Apply</button>
+        <span class="filter-date-error" id="filter-date-error"></span>
+    </form>
+
+    <script>
+        (function () {
+            var form  = document.getElementById("filter-date-form");
+            var from  = document.getElementById("date_from");
+            var to    = document.getElementById("date_to");
+            var error = document.getElementById("filter-date-error");
+
+            from.addEventListener("change", function () { to.min = from.value; });
+            to.addEventListener("change", function () { from.max = to.value; });
+
+            form.addEventListener("submit", function (e) {
+                if (from.value && to.value && from.value > to.value) {
+                    e.preventDefault();
+                    error.textContent = "'From' date must be before 'To' date.";
+                } else {
+                    error.textContent = "";
+                }
+            });
+        })();
+    </script>
+</div>
+
 <div class="profile-stats-row">
     <div class="stat-card">
         <span class="stat-label">Total Spent</span>
