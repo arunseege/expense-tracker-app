@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
@@ -104,15 +104,51 @@ def profile():
         "member_since": member_since,
         "initials": initials,
     }
-    stats = get_summary_stats(session["user_id"])
-    transactions = get_recent_transactions(session["user_id"])
-    categories = get_category_breakdown(session["user_id"])
+    date_from = request.args.get("date_from") or None
+    date_to = request.args.get("date_to") or None
+    if date_from and date_to and date_from > date_to:
+        flash("'From' date must be before 'To' date.", "error")
+        return redirect(url_for("profile"))
+    if date_from and date_to:
+        active_filter = "custom"
+    else:
+        filter_val = request.args.get("filter", "this_month")
+        today = date.today()
+        if filter_val == "this_month":
+            date_from = today.replace(day=1).strftime("%Y-%m-%d")
+            date_to = today.strftime("%Y-%m-%d")
+            active_filter = "this_month"
+        elif filter_val == "last_month":
+            last_day = today.replace(day=1) - timedelta(days=1)
+            date_from = last_day.replace(day=1).strftime("%Y-%m-%d")
+            date_to = last_day.strftime("%Y-%m-%d")
+            active_filter = "last_month"
+        elif filter_val == "last_3_months":
+            month = today.month - 3
+            year = today.year
+            if month <= 0:
+                month += 12
+                year -= 1
+            date_from = date(year, month, 1).strftime("%Y-%m-%d")
+            date_to = today.strftime("%Y-%m-%d")
+            active_filter = "last_3_months"
+        else:
+            filter_val = "all_time"
+            date_from = None
+            date_to = None
+            active_filter = "all_time"
+    stats = get_summary_stats(session["user_id"], date_from, date_to)
+    transactions = get_recent_transactions(session["user_id"], date_from=date_from, date_to=date_to)
+    categories = get_category_breakdown(session["user_id"], date_from, date_to)
     return render_template(
         "profile.html",
         user=user,
         stats=stats,
         transactions=transactions,
         categories=categories,
+        active_filter=active_filter,
+        date_from=date_from or "",
+        date_to=date_to or "",
         main_class="profile-layout",
     )
 
